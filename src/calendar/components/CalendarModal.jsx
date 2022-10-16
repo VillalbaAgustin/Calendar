@@ -1,17 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-modal';
 
 import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es';
-import DatePicker, {registerLocale} from 'react-datepicker';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-import { useUiStore } from '../../hooks';
+import { useCalendarStore, useUiStore } from '../../hooks';
 
-registerLocale('es', es)
+registerLocale('es', es);
 
 const customStyles = {
   content: {
@@ -28,22 +28,29 @@ Modal.setAppElement('#root');
 export const CalendarModal = () => {
 
   const { isDateModalOpen, closeDateModal } = useUiStore();
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
-
-  const [formSubmitted, setFormSubmitted] = useState(false)
 
   const [formValue, setFormValue] = useState({
-    title: 'Agutín',
-    notes: 'Herrera',
+    title: '',
+    notes: '',
     start: new Date(),
     end: addHours(new Date(), 2),
   });
 
   const titleClass = useMemo(() => {
     if (!formSubmitted) return '';
-    return (formValue.title.length > 0)? 'is-valid' : 'is-invalid';
+    return formValue.title.length > 0 ? 'is-valid' : 'is-invalid';
+  }, [formValue.title, formSubmitted]);
 
-  }, [formValue.title, formSubmitted])
+  useEffect(() => {
+    if (activeEvent !== null){
+      setFormValue({...activeEvent});
+    }
+  
+  }, [activeEvent])
+  
 
   const onInputChange = ({ target }) => {
     setFormValue({
@@ -60,33 +67,33 @@ export const CalendarModal = () => {
   };
 
   const onCloseModal = () => {
-    console.log('Cerrando Modal');
+    // console.log('Cerrando Modal');
     closeDateModal();
   };
 
-
-  const onSubmit = (event) =>{
-    event.preventDefault(); 
+  const onSubmit = async(event) => {
+    event.preventDefault();
     setFormSubmitted(true);
 
-    const difference  = differenceInSeconds( formValue.end, formValue.start );
+    const difference = differenceInSeconds(formValue.end, formValue.start);
     // console.log(difference);
 
-    if( isNaN(difference) || difference <= 0){
-      Swal.fire('Fechas incorrectas', 'Revisar las fechas ingresadas','error');
+    if (isNaN(difference) || difference <= 0) {
+      Swal.fire('Fechas incorrectas', 'Revisar las fechas ingresadas', 'error');
       console.log('Error en fechas');
       return;
     }
 
-    if(formValue.title.length <= 0 ) return;
+    if (formValue.title.length <= 0) return;
 
     console.log(formValue);
-    
-    //TODO:
-    // cerrar modal
-    // remover errores
-  };
 
+    //TODO:
+    await startSavingEvent (formValue);
+    closeDateModal();
+    setFormSubmitted(false);
+    
+  };
 
   return (
     <Modal
@@ -110,8 +117,8 @@ export const CalendarModal = () => {
             className="form-control"
             dateFormat="Pp"
             showTimeSelect
-            locale='es'
-            timeCaption='Hora'
+            locale="es"
+            timeCaption="Hora"
           />
           <input className="form-control" placeholder="Fecha inicio" />
         </div>
@@ -125,8 +132,8 @@ export const CalendarModal = () => {
             className="form-control"
             dateFormat="Pp"
             showTimeSelect
-            locale='es'
-            timeCaption='Hora'
+            locale="es"
+            timeCaption="Hora"
           />
           <input className="form-control" placeholder="Fecha inicio" />
         </div>
@@ -155,7 +162,7 @@ export const CalendarModal = () => {
             placeholder="Notas"
             rows="3"
             name="notes"
-            value={formValue.title}
+            value={formValue.notes}
             onChange={onInputChange}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">
@@ -163,7 +170,10 @@ export const CalendarModal = () => {
           </small>
         </div>
 
-        <button type="submit" className="btn btn-outline-primary btn-block">
+        <button 
+          type="submit" 
+          className="btn btn-outline-primary btn-block"
+        >
           <i className="far fa-save"></i>
           <span> Guardar</span>
         </button>
