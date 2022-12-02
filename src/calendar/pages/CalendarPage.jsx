@@ -60,17 +60,17 @@ export const CalendarPage = () => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: 'calc(100vh - 80px' }}
-        messages={getMessagesES()}
-        eventPropGetter={eventStyleGetter}
-        components={{
-          event: CalendarEvent
-        }}
+        // messages={getMessagesES()}
+        // eventPropGetter={eventStyleGetter}
+        // components={{
+        //   event: CalendarEvent
+        // }}
         onDoubleClickEvent={onDobleClick}
         onSelectEvent={onSelect}
         onView={onViewChanged}
         
       />
-      <CalendarModal/>
+      {/* <CalendarModal/> */}
       <FabAddNew/>
       <FabDelete/>
     </div>

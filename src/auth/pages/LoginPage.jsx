@@ -17,28 +17,31 @@ const registerFormFields = {
 };
 
 export const LoginPage = () => {
-
-  const { startLogin, errorMessage } = useAuthStore();
+  const { startLogin, startRegister, errorMessage } = useAuthStore();
 
   const { loginEmail, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
-  const { registerName ,registerEmail, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm( registerFormFields );
+  const { registerName, registerEmail, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
 
   const loginSubmit = (event) => {
     event.preventDefault();
-    startLogin({email: loginEmail, password: loginPassword});
-  }
+    startLogin({ email: loginEmail, password: loginPassword });
+  };
 
   const registerSubmit = (event) => {
     event.preventDefault();
-    console.log({ registerName, registerEmail, registerPassword, registerPassword2 });
-  }
+    if ( registerPassword !== registerPassword2 ) {
+      Swal.fire('Error contraseña', 'Las contraseñas no coinsiden', 'warning');
+      return;
+    }
+    startRegister({ name: registerName, email: registerEmail, password: registerPassword });
+    
+  };
 
   useEffect(() => {
-    if ( errorMessage !== undefined) {
+    if (errorMessage !== undefined) {
       Swal.fire('Error en la autenticación', errorMessage, 'error');
     }
-  }, [errorMessage])
-  
+  }, [errorMessage]);
 
   return (
     <div className="container login-container">
@@ -53,7 +56,7 @@ export const LoginPage = () => {
                 placeholder="Correo"
                 name="loginEmail"
                 value={loginEmail}
-                onChange= {onLoginInputChange}
+                onChange={onLoginInputChange}
               />
             </div>
             <div className="form-group mb-2">
@@ -63,7 +66,7 @@ export const LoginPage = () => {
                 placeholder="Contraseña"
                 name="loginPassword"
                 value={loginPassword}
-                onChange= {onLoginInputChange}
+                onChange={onLoginInputChange}
               />
             </div>
             <div className="d-gird gap-2">
@@ -74,15 +77,15 @@ export const LoginPage = () => {
 
         <div className="col-md-6 login-form-2">
           <h3>Registro</h3>
-          <form onSubmit={ registerSubmit }>
+          <form onSubmit={registerSubmit}>
             <div className="form-group mb-2">
               <input
                 type="text"
                 className="form-control"
                 placeholder="Nombre"
-                name='registerName'
+                name="registerName"
                 value={registerName}
-                onChange= {onRegisterInputChange}
+                onChange={onRegisterInputChange}
               />
             </div>
             <div className="form-group mb-2">
@@ -90,9 +93,9 @@ export const LoginPage = () => {
                 type="email"
                 className="form-control"
                 placeholder="Correo"
-                name='registerEmail'
+                name="registerEmail"
                 value={registerEmail}
-                onChange= {onRegisterInputChange}
+                onChange={onRegisterInputChange}
               />
             </div>
             <div className="form-group mb-2">
@@ -100,9 +103,9 @@ export const LoginPage = () => {
                 type="password"
                 className="form-control"
                 placeholder="Contraseña"
-                name='registerPassword'
+                name="registerPassword"
                 value={registerPassword}
-                onChange= {onRegisterInputChange}
+                onChange={onRegisterInputChange}
               />
             </div>
 
@@ -111,9 +114,9 @@ export const LoginPage = () => {
                 type="password"
                 className="form-control"
                 placeholder="Repita la contraseña"
-                name='registerPassword2'
+                name="registerPassword2"
                 value={registerPassword2}
-                onChange= {onRegisterInputChange}
+                onChange={onRegisterInputChange}
               />
             </div>
 
