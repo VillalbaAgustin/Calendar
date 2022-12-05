@@ -24,7 +24,7 @@ export const LoginPage = () => {
 
   const loginSubmit = (event) => {
     event.preventDefault();
-    startLogin({ email: loginEmail, password: loginPassword });
+    startLogin({ email: loginEmail , password: loginPassword });
   };
 
   const registerSubmit = (event) => {
@@ -56,6 +56,7 @@ export const LoginPage = () => {
                 placeholder="Correo"
                 name="loginEmail"
                 value={loginEmail}
+                // value={'admin@gmail.com'}
                 onChange={onLoginInputChange}
               />
             </div>
@@ -66,6 +67,7 @@ export const LoginPage = () => {
                 placeholder="Contraseña"
                 name="loginPassword"
                 value={loginPassword}
+                // value={'123456'}
                 onChange={onLoginInputChange}
               />
             </div>

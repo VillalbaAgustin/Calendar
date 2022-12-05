@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 import calendarApi from '../api/calendarApi';
 import { convertEventsToDateEvents } from '../helper';
 import {
   onAddNewEvent,
   onDeleteEvent,
+  onLoadEvents,
   onSetActiveEvent,
   onUpdateEvent,
 } from '../store';
@@ -19,37 +21,47 @@ export const useCalendarStore = () => {
     dispatch(onSetActiveEvent(calendarEvent));
   };
 
-  
   const startSavingEvent = async (calendarEvent) => {
-    //TODO: Update event
+    try {
+      if (calendarEvent._id) {
+        
+        //Actualizando
+        await calendarApi.put(`/events/${calendarEvent._id}`, calendarEvent);
+        dispatch(onUpdateEvent({ ...calendarEvent, user }));
+        return;
+      };
 
-    //Todo bien
-    if (calendarEvent._id) {
-      //Actualizando
-      dispatch(onUpdateEvent({ ...calendarEvent }));
-    } else {
       //Creando
-      const { data } = await calendarApi.post('/events', calendarEvent );
+      const { data } = await calendarApi.post('/events', calendarEvent);
       dispatch(onAddNewEvent({ ...calendarEvent, _id: data.evento._id, user }));
+    } catch (error) {
+      console.log(error);
+      Swal.fire('Error al guardar', error.response.data.msg, 'error');
     }
   };
 
-  const startdeletingEvent = () => {
-    //Todo: Llegar al backend
-    dispatch(onDeleteEvent());
+  const startdeletingEvent = async () => {
+
+    try {
+      await calendarApi.delete(`/events/${ activeEvent._id }`);
+      dispatch(onDeleteEvent());
+    } catch (error) {
+      console.log(error);
+      Swal.fire('Error al eliminar', error.response.data.msg, 'error');
+    }
+
   };
 
-
-  const startLoadingEvents = async() => {
+  const startLoadingEvents = async () => {
     try {
       const { data } = await calendarApi.get('/events');
-      console.log({data});
-      const events = convertEventsToDateEvents( data.eventos );
+      const events = convertEventsToDateEvents(data.eventos);
+      dispatch(onLoadEvents(events));
     } catch (error) {
       console.log('Error cargando eventos');
       console.log(error);
     }
-  }
+  };
 
   return {
     //*Propiedades
