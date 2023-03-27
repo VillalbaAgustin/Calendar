@@ -137,7 +137,7 @@ export const CalendarModal = () => {
             locale="es"
             timeCaption="Hora"
           />
-          <input className="form-control" placeholder="Fecha inicio" />
+          <input className="form-control" placeholder="Fecha fin" />
         </div>
 
         <hr />
