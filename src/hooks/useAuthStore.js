@@ -19,7 +19,7 @@ export const useAuthStore = () => {
 
 
     } catch (error) {
-      dispatch(onLogout('Credenciales incorrectas'));
+      dispatch(onLogout(error.response.data?.msg || 'Credenciales incorrectas'));
       setTimeout(() => {
         dispatch(clearErrorMessage());
       }, 10);
@@ -31,7 +31,7 @@ export const useAuthStore = () => {
   const startRegister = async ({name, email, password }) => {
     
     dispatch(onChecking());
-    console.log({name, email, password});
+    // console.log({name, email, password});
 
     try {
       const {data} = await calendarApi.post('/auth/new', { name, email, password });
