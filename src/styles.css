@@ -60,3 +60,25 @@
   width: 60px;
   height: 60px;
 }
+
+/* Loading */
+.spinner {
+  /* margin: 3rem; */
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-radius: 50%;
+  border: 4px solid;
+  border-color:  rgb(231, 231, 238) rgba(146, 145, 145, 0.667) rgba(74, 73, 73, 0.667) rgba(3, 3, 3, 0.667);
+  animation: girar 1s infinite forwards;
+}
+
+@keyframes girar {
+  from {
+      transform: rotate(0deg);
+  }
+
+  to {
+      transform: rotate(360deg);
+  }
+}

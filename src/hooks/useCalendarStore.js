@@ -15,7 +15,6 @@ export const useCalendarStore = () => {
 
   const { events, activeEvent } = useSelector((state) => state.calendar);
   const { user } = useSelector((state) => state.auth);
-  // console.log({events});
 
   const setActiveEvent = (calendarEvent) => {
     dispatch(onSetActiveEvent(calendarEvent));
@@ -35,7 +34,6 @@ export const useCalendarStore = () => {
       const { data } = await calendarApi.post('/events', calendarEvent);
       dispatch(onAddNewEvent({ ...calendarEvent, _id: data.evento._id, user }));
     } catch (error) {
-      console.log(error);
       Swal.fire('Error al guardar', error.response.data.msg, 'error');
     }
   };
@@ -46,7 +44,6 @@ export const useCalendarStore = () => {
       await calendarApi.delete(`/events/${ activeEvent._id }`);
       dispatch(onDeleteEvent());
     } catch (error) {
-      console.log(error);
       Swal.fire('Error al eliminar', error.response.data.msg, 'error');
     }
 
@@ -59,7 +56,6 @@ export const useCalendarStore = () => {
       dispatch(onLoadEvents(events));
     } catch (error) {
       console.log('Error cargando eventos');
-      console.log(error);
     }
   };
 

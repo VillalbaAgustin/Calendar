@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import { LoginPage } from "../auth";
 import { CalendarPage } from "../calendar";
 import { useAuthStore } from "../hooks";
+import '../styles.css';
 
 export const AppRouter = () => {
   
@@ -15,7 +16,9 @@ export const AppRouter = () => {
   
   if ( status === 'checking') {
     return (
-      <h3>Cargando...</h3>
+    <div style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+      <div className="spinner" />
+    </div>
     )
   }
 
