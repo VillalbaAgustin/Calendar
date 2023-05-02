@@ -5,7 +5,7 @@ export const getEnvVariables = () => {
   // import.meta.env;
 
   return {
-    VITE_API_URL: 'https://calendar-backend-production-9efe.up.railway.app/api',
+    VITE_API_URL: 'calendar-backend-production-6d29.up.railway.app',
     // ...import.meta.env
   }
 }
